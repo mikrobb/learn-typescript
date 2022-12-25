@@ -85,36 +85,78 @@ import './App.css';
 // Типизация событий
 //----------------------------------------=
 
-type CounterState = {
-  count: number,
-}
+//==== OnClick Event
 
-type CounterProps = {
-  title?: string,
-}
+// type CounterState = {
+//   count: number,
+// }
 
-class Counter extends Component<CounterProps, CounterState>{
-  state= {
-    count:0,
+// type CounterProps = {
+//   title?: string,
+// }
+
+// class Counter extends Component<CounterProps, CounterState>{
+//   state= {
+//     count:0,
+//   }
+
+
+//   handleClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) =>{
+//     console.log(`${e.clientX}, ${e.clientY}`)
+//     this.setState(({count})=> ({
+//       count: ++count
+//     }));
+//   }
+
+//   render(): React.ReactNode {
+//     return(
+//       <div>
+//         <h1>{this.props.title}{this.state.count}</h1>
+//         <button onClick={this.handleClick}>+1</button>
+//         <a href="" onClick={this.handleClick}>Link</a>
+//       </div>
+//     )
+//   }
+// }
+
+// const App = () => <Counter title='Counter:'/>
+
+// export default App;
+
+
+
+
+
+//==== OnFocus and FormElements and OnCopy Event
+
+class Form extends Component<{}, {}>{
+
+  handleFocus = (e : React.FocusEvent<HTMLInputElement>) => {
+    console.log(e.currentTarget)
   }
 
-
-  handleClick = () =>{
-    this.setState(({count})=> ({
-      count: ++count
-    }));
+  handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("Submited")
   }
 
-  render(): React.ReactNode {
-    return(
-      <div>
-        <h1>{this.props.title}{this.state.count}</h1>
-        <button onClick={this.handleClick}>+1</button>
-      </div>
+  handleCopy =(e: React.ClipboardEvent)=>{
+    console.log("Copied")
+  }
+
+  render(){
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Simple Text:
+          <input onCopy={this.handleCopy} onFocus={this.handleFocus} type="text" name="text" />
+          <button type='submit'>Submit</button>
+        </label>
+      </form>
     )
   }
 }
 
-const App = () => <Counter title='Counter:'/>
+const App:React.FC = () => <Form/>
 
 export default App;
