@@ -129,34 +129,156 @@ import './App.css';
 
 //==== OnFocus and FormElements and OnCopy Eventt
 
-class Form extends Component<{}, {}>{
+// class Form extends Component<{}, {}>{
 
-  handleFocus = (e : React.FocusEvent<HTMLInputElement>) => {
-    console.log(e.currentTarget)
+//   handleFocus = (e : React.FocusEvent<HTMLInputElement>) => {
+//     console.log(e.currentTarget)
+//   }
+
+//   handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+//     e.preventDefault();
+//     console.log("Submited")
+//   }
+
+//   handleCopy =(e: React.ClipboardEvent)=>{
+//     console.log("Copied")
+//   }
+
+//   render(){
+//     return (
+//       <form onSubmit={this.handleSubmit}>
+//         <label>
+//           Simple Text:
+//           <input onCopy={this.handleCopy} onFocus={this.handleFocus} type="text" name="text" />
+//           <button type='submit'>Submit</button>
+//         </label>
+//       </form>
+//     )
+//   }
+// }
+
+// const App:React.FC = () => <Form/>
+
+// export default App;
+
+
+
+//----------------------------------------
+// Типизация елементов 
+//----------------------------------------=
+
+
+const POSITIONS = [
+  {
+    id: 'fd',
+    value: 'Front-end Developer',
+    title: 'Front-end Developer',
+  },
+  {
+    id: 'bd',
+    value: 'Back-end Developer',
+    title: 'Back-end Developer',
+  }
+];
+
+const DEFAULT_SELECT_VALUE = POSITIONS[0].value;
+const styles = { display: 'block', marginBottom: '10px' };
+
+class Form extends Component {
+  
+  state = {
+    inputText: '',
+    textareaText: '',
+    selectText: DEFAULT_SELECT_VALUE,
+    showData: {
+      name: '',
+      text: '',
+      position: '',
+    }
   }
 
-  handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  private rootRef = React.createRef<HTMLSelectElement>();
+
+  handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { target: { value: inputText } } = e;
+    this.setState({ inputText });
+  };
+
+  handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { target: { value: textareaText } } = e;
+    this.setState({ textareaText });
+  };
+
+  handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { target: { value: selectText } } = e;
+    this.setState({ selectText });
+  };
+
+  handleShow = (e:React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log("Submited")
-  }
+    const { inputText, textareaText, selectText } = this.state;
 
-  handleCopy =(e: React.ClipboardEvent)=>{
-    console.log("Copied")
-  }
+    this.setState({
+      inputText: '',
+      textareaText: '',
+      selectText: DEFAULT_SELECT_VALUE,
+      showData: {
+        name: inputText,
+        text: textareaText,
+        position: selectText,
+      }
+    })
+  };
 
-  render(){
+  render() {
+    const { inputText, textareaText, selectText, showData } = this.state;
+    const { name, text, position } = showData;
+
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Simple Text:
-          <input onCopy={this.handleCopy} onFocus={this.handleFocus} type="text" name="text" />
-          <button type='submit'>Submit</button>
-        </label>
-      </form>
-    )
+      <>
+        <form>
+          <label style={styles}>
+            Name:
+            <input
+              type="text"
+              value={inputText}
+              onChange={this.handleInputChange}
+            />
+          </label>
+
+          <label style={styles}>
+            Text:
+            <textarea
+              value={textareaText}
+              onChange={this.handleTextareaChange}
+            />
+          </label>
+
+          <select
+            style={styles}
+            value={selectText}
+            onChange={this.handleSelectChange}
+            ref={this.rootRef}
+          >
+            {POSITIONS.map(({ id, value, title }) => (
+              <option
+                key={id}
+                value={value}
+              >{title}</option>
+            ))}
+          </select>
+
+          <button onClick={this.handleShow}>Show Data</button>
+        </form>
+
+        <h2>{name}</h2>
+        <h3>{text}</h3>
+        <h3>{position}</h3>
+      </>
+    );
   }
 }
 
-const App:React.FC = () => <Form/>
+const App:React.FC = () => <Form />;
 
 export default App;
